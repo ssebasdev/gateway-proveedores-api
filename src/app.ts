@@ -9,10 +9,10 @@ app.use(express.json());
 
 function validateToken(req: Request, res: Response, next: Function) {
     if (!req.headers['x-api-key'] || req.headers['x-api-key'] !== process.env.API_KEY) {
-        return res.send({
+        return res.status(401).send({
             message: 'Unauthorized',
             status: 401
-        }).status(401);
+        });
     }
 
     next();
@@ -22,7 +22,7 @@ app.get('/', validateToken, (req: Request, res: Response) => {
     res.send({
         message: 'API Recibos',
         status: 200
-    }).status(200);
+    });
 });
 
 
@@ -34,10 +34,10 @@ app.get('/recibo/sedapal/:supplyCode', validateToken, async (req: Request, res: 
     const tokenObtained = await sedapal.getToken();
 
     if (!tokenObtained) {
-        return res.send({
+        return res.status(401).send({
             message: 'No se pudo obtener el token de Sedapal',
             status: 401
-        }).status(401);
+        });
     }
 
     // consultar los recibos
@@ -47,19 +47,19 @@ app.get('/recibo/sedapal/:supplyCode', validateToken, async (req: Request, res: 
     const currentReceipt = await sedapal.getCurrentReceipt(receipts, supplyCode);
 
     if (!currentReceipt) {
-        return res.send({
+        return res.status(404).send({
             message: 'No se encontro el recibo del mes actual',
             status: 404
-        }).status(404);
+        });
     }
 
     // descargar el recibo
     const pdfBuffer = await sedapal.downloadReceipt(currentReceipt);
     if (!pdfBuffer) {
-        return res.send({
+        return res.status(404).send({
             message: 'No se pudo descargar el recibo del mes actual',
             status: 404
-        }).status(404);
+        });
     }
 
     res.header('Content-Type', 'application/pdf');
@@ -77,10 +77,10 @@ app.post('/recibo/calidda/:supplyCode', validateToken, async (req: Request, res:
     const pdfBuffer = await calidda.getReceipt(supplyCode, body.documentNumber, body.documentType);
 
     if (!pdfBuffer) {
-        return res.send({
+        return res.status(404).send({
             message: 'No se pudo descargar el recibo de Calidda',
             status: 404
-        }).status(404);
+        });
     }
 
     res.header('Content-Type', 'application/pdf');
