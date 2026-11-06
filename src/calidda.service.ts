@@ -1,6 +1,8 @@
+import dayjs from './lib.ts';
+
 export class CaliddaService {
     async getReceipt(supplyCode: string, documentNumber: string, documentType: 'PE2' | 'PE1') {
-        const currentDate = new Date();
+        const currentDate = dayjs.tz();
 
         const response = await fetch('https://generadorrecibos.calidda.com.pe/Back/api/ReceiptView/GetPdfForRecibos', {
             method: 'POST',
@@ -11,8 +13,8 @@ export class CaliddaService {
                 "clientCode": supplyCode,
                 "numberDocument": documentNumber,
                 "typeDocument": documentType,
-                "month": currentDate.getMonth(),
-                "year": currentDate.getFullYear(),
+                "month": parseInt(currentDate.format("M")),
+                "year": parseInt(currentDate.format("YYYY")),
                 "captcha": ""
             })
         });

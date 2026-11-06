@@ -1,3 +1,5 @@
+import dayjs from "./lib.ts";
+
 export class SedapalService {
     private url: string;
     private token: string | null;
@@ -74,9 +76,9 @@ export class SedapalService {
             const year = billDate.slice(0, 1).join('');
             const month = billDate.slice(1, 2).join('');
 
-            const currentDate = new Date();
+            const currentDate = dayjs.tz();
 
-            if (parseInt(month) === currentDate.getMonth() && parseInt(year) === currentDate.getFullYear()) {
+            if (parseInt(month) === parseInt(currentDate.format("M")) && parseInt(year) === parseInt(currentDate.format("YYYY"))) {
                 return {
                     ...receipt,
                     nis_rad: parseInt(supplyCode)

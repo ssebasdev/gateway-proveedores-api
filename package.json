@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
   "packageManager": "pnpm@12.16.1",
   "type": "module",
   "dependencies": {
+    "dayjs": "^1.11.23",
     "dotenv": "^18.0.9",
     "express": "^5.3.0"
   },
